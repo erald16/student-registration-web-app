@@ -10,7 +10,13 @@ require('dotenv').config();
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/student_registration', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
+const db = mongoose.connection;
+
+// Check if the connection to MongoDB is successful
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
 
 // Define the Student schema
 const studentSchema = new mongoose.Schema({
