@@ -5,16 +5,15 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/student_registration', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// Body parser middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// Student model
-const Student = mongoose.model('Student', {
+// Define the Student schema
+const studentSchema = new mongoose.Schema({
   name: String,
   surname: String,
   birthdate: Date,
@@ -29,6 +28,13 @@ const Student = mongoose.model('Student', {
   languages: String,
 });
 
+// Create the Student model
+const Student = mongoose.model('Student', studentSchema);
+
+// Body parser middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -40,8 +46,27 @@ app.get('/', (req, res) => {
 
 app.post('/register', async (req, res) => {
   try {
-    const student = new Student(req.body);
+    // Create a new Student instance with data from the form
+    const studentData = {
+      name: req.body.name,
+      surname: req.body.surname,
+      birthdate: req.body.birthdate,
+      telephone: req.body.telephone,
+      address: req.body.address,
+      city: req.body.city,
+      zipCode: req.body.zipCode,
+      state: req.body.state,
+      country: req.body.country,
+      hobbies: req.body.hobbies,
+      qualifications: req.body.qualifications,
+      languages: req.body.languages,
+    };
+
+    // Save the student data to MongoDB
+    const student = new Student(studentData);
     await student.save();
+
+    // Redirect to the home page
     res.redirect('/');
   } catch (error) {
     console.error(error);
