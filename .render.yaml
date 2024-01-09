@@ -1,5 +1,6 @@
 services:
   - name: web
     type: web
-    buildCommand: cd src/backend && npm install && npm run build
-    startCommand: cd src/backend && npm start
+    root: .
+    buildCommand: npm install && npm run build
+    startCommand: npm start
