@@ -50,6 +50,18 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+// Route to retrieve all students
+app.get('/students', async (req, res) => {
+  try {
+    const students = await Student.find({});
+    res.json(students);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 app.post('/register', async (req, res) => {
   try {
     // Create a new Student instance with data from the form
