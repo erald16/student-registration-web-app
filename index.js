@@ -86,6 +86,7 @@ app.post('/register', async (req, res) => {
 
     // Redirect to the home page
     res.redirect('/');
+    console.log('STUDENT INSERTED SUCCESSFULLY');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
