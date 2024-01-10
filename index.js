@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:3000/student-db', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:3000/student-db', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect("mongodb+srv://emirashi12:ZzDxNuQiTqHbODZb@student-db.35lkoft.mongodb.net/?retryWrites=true&w=majority")
 const db = mongoose.connection;
 
 // Check if the connection to MongoDB is successful
