@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/backend/app.js",
+    "start": "node src/backend/index.js",
     "build": "echo 'No build step needed'"
   },
   "keywords": [],
