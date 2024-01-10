@@ -8,7 +8,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100px;
   }
 
   h1 {
@@ -18,7 +18,7 @@ body {
   form {
   position: relative;
   height: 50px;
-  width: 100%;
+  width: 40%;
   outline: none;
   font-size: 1rem;
   color: #707070;
