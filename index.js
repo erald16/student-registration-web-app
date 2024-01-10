@@ -41,6 +41,7 @@ const Student = mongoose.model('Student', studentSchema);
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
