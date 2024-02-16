@@ -48,9 +48,9 @@
     <label for="courses">Courses:</label>
     <select name="courses" multiple>
       <% courses.forEach(course => { %>
-        <!-- <% if (course.isActive) { %> -->
+        <% if (course.isActive) { %>
           <option value="<%= course._id %>"><%= course.name %></option>
-        <!-- <% } %> -->
+        <% } %>
       <% }) %>
     </select>
     <% console.log(courses); %>
