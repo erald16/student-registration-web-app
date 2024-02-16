@@ -60,8 +60,8 @@ app.set('views', __dirname + '/views');
 // Routes
 app.get('/', async (req, res) => {
   try {
-    const courses = await Course.find({ isActive: true }, 'name');
-    res.render('index', { courses }); // Pass the courses variable to the template
+    const activeCourses = await Course.find({ isActive: true }, 'name');
+    res.render('index', { courses: activeCourses });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
