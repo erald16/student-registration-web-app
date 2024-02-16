@@ -57,7 +57,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
-// Routes
+//Routes
 app.get('/', async (req, res) => {
   try {
     const activeCourses = await Course.find({ isActive: true }, 'name');
@@ -68,18 +68,16 @@ app.get('/', async (req, res) => {
   }
 });
 
-// Route to retrieve all courses
-app.get('/register', async (req, res) => {
+// Route to retrieve only active courses
+app.get('/courses', async (req, res) => {
   try {
-    const courses = await Course.find({}, 'name');
-    res.render('register', { courses });
+    const activeCourses = await Course.find({ isActive: true });
+    res.json(activeCourses);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
 
 // Route to handle course data from Salesforce
 app.post('/courses', async (req, res) => {
@@ -121,19 +119,20 @@ app.get('/students', async (req, res) => {
 
 app.get('/register', async (req, res) => {
   try {
-    const courses = await Course.find({}, 'name');
-    res.render('register', { courses }); // Pass the courses variable to the template
+    const activeCourses = await Course.find({ isActive: true }, 'name');
+    res.render('register', { courses: activeCourses });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+
 app.post('/register', async (req, res) => {
   try {
     // Create a new Student instance with data from the form
 
-    const selectedCourses = req.body.courses;
+    const selectedCourses = req.body.coursesourses;
     const studentData = {
       name: req.body.name,
       surname: req.body.surname,
