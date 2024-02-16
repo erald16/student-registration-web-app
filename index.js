@@ -64,8 +64,8 @@ app.get('/', (req, res) => {
 // Route to retrieve all courses
 app.get('/courses', async (req, res) => {
   try {
-    const courses = await Course.find({});
-    res.json(courses);
+    const coursesGet = await Course.find({});
+    res.json(coursesGet);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -81,8 +81,8 @@ app.post('/courses', async (req, res) => {
     };
 
     // Save the course data to MongoDB
-    const course = new Course(courseData);
-    await course.save();
+    const courseNew = new Course(courseData);
+    await courseNew.save();
 
     // Respond with a success message
     res.status(201).json({ message: 'Course created successfully' });
@@ -103,11 +103,10 @@ app.get('/students', async (req, res) => {
   }
 });
 
-// Modify your registration route to fetch courses and render the form
 app.get('/register', async (req, res) => {
   try {
     const courses = await Course.find({}, 'name');
-    res.render('register', { courses });
+    res.render('register', { courses }); // Pass the courses variable to the template
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
