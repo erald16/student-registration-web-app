@@ -71,13 +71,14 @@ app.get('/', async (req, res) => {
 // Route to retrieve all courses
 app.get('/courses', async (req, res) => {
   try {
-    const coursesGet = await Course.find({});
-    res.json(coursesGet);
+    const activeCourses = await Course.find({ isActive: true });
+    res.json(activeCourses);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // Route to handle course data from Salesforce
 app.post('/courses', async (req, res) => {
