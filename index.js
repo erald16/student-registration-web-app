@@ -77,7 +77,7 @@ app.post('/courses', async (req, res) => {
   try {
     // Create a new Course instance with data from Salesforce
     const courseData = {
-      course_name: req.body.course_name,
+    name: req.body.name,
     };
 
     // Save the course data to MongoDB
