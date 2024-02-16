@@ -44,14 +44,15 @@
 
     <label for="country">Country:</label>
     <input type="text" name="country" required>
-
-    <label for="courses">Select Courses:</label>
+    <!-- Add this snippet to your register.ejs file -->
+    <label for="courses">Courses:</label>
     <select name="courses" multiple>
       <% courses.forEach(course => { %>
         <option value="<%= course._id %>"><%= course.name %></option>
       <% }); %>
     </select>
-    
+
+
     <label for="hobbies">Hobbies:</label>
     <input type="text" name="hobbies">
 
