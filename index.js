@@ -81,22 +81,30 @@ app.get('/courses', async (req, res) => {
 // Route to handle course data from Salesforce
 app.post('/courses', async (req, res) => {
   try {
-    // Create a new Course instance with data from Salesforce
-    const courseData = {
-    name: req.body.name,
-    };
+    // Extract the list of course names from the request body
+    const courseNames = req.body.courses;
 
-    // Save the course data to MongoDB
-    const courseNew = new Course(courseData);
-    await courseNew.save();
+    // Validate that courses are provided
+    if (!courseNames || !Array.isArray(courseNames) || courseNames.length === 0) {
+      return res.status(400).json({ error: 'Invalid or empty list of courses' });
+    }
+
+    // Create an array of Course instances with data from Salesforce
+    const coursesData = courseNames.map(courseName => ({
+      name: courseName,
+    }));
+
+    // Save the array of course data to MongoDB
+    const courses = await Course.create(coursesData);
 
     // Respond with a success message
-    res.status(201).json({ message: 'Course created successfully' });
+    res.status(201).json({ message: 'Courses created successfully', courses });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // Route to retrieve all students
 app.get('/students', async (req, res) => {
