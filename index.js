@@ -57,8 +57,14 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
 // Routes
-app.get('/', (req, res) => {
-  res.render('index');
+app.get('/', async (req, res) => {
+  try {
+    const courses = await Course.find({}, 'name');
+    res.render('index', { courses }); // Pass the courses variable to the template
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 // Route to retrieve all courses
