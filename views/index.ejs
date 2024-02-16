@@ -45,6 +45,14 @@
     <label for="country">Country:</label>
     <input type="text" name="country" required>
 
+<!-- Example using EJS to dynamically populate courses -->
+<select name="courses" multiple>
+  <% courses.forEach(course => { %>
+    <option value="<%= course._id %>"><%= course.name %></option>
+  <% }); %>
+</select>
+
+
     <label for="hobbies">Hobbies:</label>
     <input type="text" name="hobbies">
 

@@ -19,6 +19,12 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+// Define the Course schema
+const courseSchema = new mongoose.Schema({
+  course_name: String,
+});
+const Course = mongoose.model('Course', courseSchema);
+
 // Define the Student schema
 const studentSchema = new mongoose.Schema({
   name: String,
@@ -32,6 +38,7 @@ const studentSchema = new mongoose.Schema({
   zipCode: String,
   state: String,
   country: String,
+  courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   hobbies: String,
   qualifications: String,
   languages: String,
@@ -54,6 +61,37 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+// Route to retrieve all courses
+app.get('/courses', async (req, res) => {
+  try {
+    const courses = await Course.find({});
+    res.json(courses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Route to handle course data from Salesforce
+app.post('/courses', async (req, res) => {
+  try {
+    // Create a new Course instance with data from Salesforce
+    const courseData = {
+      course_name: req.body.course_name,
+    };
+
+    // Save the course data to MongoDB
+    const course = new Course(courseData);
+    await course.save();
+
+    // Respond with a success message
+    res.status(201).json({ message: 'Course created successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Route to retrieve all students
 app.get('/students', async (req, res) => {
   try {
@@ -65,10 +103,22 @@ app.get('/students', async (req, res) => {
   }
 });
 
+// Modify your registration route to fetch courses and render the form
+app.get('/register', async (req, res) => {
+  try {
+    const courses = await Course.find({}, 'name');
+    res.render('register', { courses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.post('/register', async (req, res) => {
   try {
     // Create a new Student instance with data from the form
+
+    const selectedCourses = req.body.courses;
     const studentData = {
       name: req.body.name,
       surname: req.body.surname,
@@ -81,6 +131,7 @@ app.post('/register', async (req, res) => {
       zipCode: req.body.zipCode,
       state: req.body.state,
       country: req.body.country,
+      courses: selectedCourses,
       hobbies: req.body.hobbies,
       qualifications: req.body.qualifications,
       languages: req.body.languages,
