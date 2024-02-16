@@ -60,7 +60,7 @@ app.set('views', __dirname + '/views');
 // Routes
 app.get('/', async (req, res) => {
   try {
-    const courses = await Course.find({}, 'name');
+    const courses = await Course.find({ isActive: true }, 'name');
     res.render('index', { courses }); // Pass the courses variable to the template
   } catch (error) {
     console.error(error);
