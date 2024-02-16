@@ -21,7 +21,7 @@ db.once('open', () => {
 
 // Define the Course schema
 const courseSchema = new mongoose.Schema({
-  course_name: String,
+  name: String,
 });
 const Course = mongoose.model('Course', courseSchema);
 
