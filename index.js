@@ -69,15 +69,16 @@ app.get('/', async (req, res) => {
 });
 
 // Route to retrieve all courses
-app.get('/courses', async (req, res) => {
+app.get('/register', async (req, res) => {
   try {
-    const activeCourses = await Course.find({ isActive: true });
-    res.json(activeCourses);
+    const courses = await Course.find({}, 'name');
+    res.render('register', { courses });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 // Route to handle course data from Salesforce
