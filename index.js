@@ -22,6 +22,7 @@ db.once('open', () => {
 // Define the Course schema
 const courseSchema = new mongoose.Schema({
   name: String,
+  isActive: { type: Boolean, default: true }
 });
 const Course = mongoose.model('Course', courseSchema);
 
@@ -81,29 +82,28 @@ app.get('/courses', async (req, res) => {
 // Route to handle course data from Salesforce
 app.post('/courses', async (req, res) => {
   try {
-    // Extract the list of course names from the request body
-    const courseNames = req.body.courses;
+    const { name, isActive } = req.body;
 
-    // Validate that courses are provided
-    if (!courseNames || !Array.isArray(courseNames) || courseNames.length === 0) {
-      return res.status(400).json({ error: 'Invalid or empty list of courses' });
+    // Check if the course already exists in the database
+    const existingCourse = await Course.findOne({ name });
+
+    if (existingCourse) {
+      // If the course exists, update the isActive value
+      existingCourse.isActive = isActive;
+      await existingCourse.save();
+      res.status(200).json({ message: 'Course updated successfully' });
+    } else {
+      // If the course doesn't exist, create a new record
+      const newCourse = new Course({ name, isActive });
+      await newCourse.save();
+      res.status(201).json({ message: 'Course created successfully' });
     }
-
-    // Create an array of Course instances with data from Salesforce
-    const coursesData = courseNames.map(courseName => ({
-      name: courseName,
-    }));
-
-    // Save the array of course data to MongoDB
-    const courses = await Course.create(coursesData);
-
-    // Respond with a success message
-    res.status(201).json({ message: 'Courses created successfully', courses });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 // Route to retrieve all students
