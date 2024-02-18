@@ -105,7 +105,6 @@ app.post('/courses', async (req, res) => {
 });
 
 
-
 // Route to retrieve all students
 app.get('/students', async (req, res) => {
   try {
