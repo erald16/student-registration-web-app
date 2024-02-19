@@ -82,27 +82,36 @@ app.get('/courses', async (req, res) => {
 // Route to handle course data from Salesforce
 app.post('/courses', async (req, res) => {
   try {
-    const { name, isActive } = req.body;
+    const courses = req.body;
 
-    // Check if the course already exists in the database
-    const existingCourse = await Course.findOne({ name });
-
-    if (existingCourse) {
-      // If the course exists, update the isActive value
-      existingCourse.isActive = isActive;
-      await existingCourse.save();
-      res.status(200).json({ message: 'Course updated successfully' });
-    } else {
-      // If the course doesn't exist, create a new record
-      const newCourse = new Course({ name, isActive });
-      await newCourse.save();
-      res.status(201).json({ message: 'Course created successfully' });
+    if (!Array.isArray(courses)) {
+      return res.status(400).json({ error: 'Invalid request. Expected an array of courses.' });
     }
+
+    const results = await Promise.all(
+      courses.map(async (course) => {
+        const { name, isActive } = course;
+        const existingCourse = await Course.findOne({ name });
+
+        if (existingCourse) {
+          existingCourse.isActive = isActive;
+          await existingCourse.save();
+          return { message: `Course ${name} updated successfully` };
+        } else {
+          const newCourse = new Course({ name, isActive });
+          await newCourse.save();
+          return { message: `Course ${name} created successfully` };
+        }
+      })
+    );
+
+    res.status(200).json(results);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 // Route to retrieve all students
